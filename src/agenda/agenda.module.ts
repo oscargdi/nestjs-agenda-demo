@@ -11,7 +11,6 @@ import {
     {
       provide: Agenda,
       useFactory: async (options: AgendaConfig) => {
-        console.log('options', options);
         const agenda = new Agenda(options);
         await agenda.start();
         return agenda;
