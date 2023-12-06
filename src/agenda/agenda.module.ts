@@ -1,10 +1,24 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigurableModuleClass } from './agenda.module-definition';
-import { AgendaService } from './agenda.service';
+import { Agenda, AgendaConfig } from 'agenda';
+import {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+} from './agenda.module-definition';
 
 @Global()
 @Module({
-  providers: [AgendaService],
-  exports: [AgendaService],
+  providers: [
+    {
+      provide: Agenda,
+      useFactory: async (options: AgendaConfig) => {
+        console.log('options', options);
+        const agenda = new Agenda(options);
+        await agenda.start();
+        return agenda;
+      },
+      inject: [MODULE_OPTIONS_TOKEN],
+    },
+  ],
+  exports: [Agenda],
 })
 export class AgendaModule extends ConfigurableModuleClass {}
